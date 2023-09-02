@@ -1,4 +1,4 @@
-package com.levochka108;
+package com.levochka108.classGB.day_03.task1;
 /*
  * arrayOutOfBoundsException()
  * Если нам нужно преданамеренно получить ошибку в блоке
