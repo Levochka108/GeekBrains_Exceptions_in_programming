@@ -7,22 +7,59 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
+/**
+ * Напишите приложение, которое будет запрашивать у пользователя следующие данные, разделенные пробелом:
+ * Фамилия Имя Отчество номертелефона
+ *
+ * Форматы данных:
+ * фамилия, имя, отчество - строки
+ * номертелефона - целое беззнаковое число без форматирования
+ *
+ * Ввод всех элементов через пробел
+ *
+ * Приложение должно проверить введенные данные по количеству. Если количество не совпадает с требуемым, вернуть код ошибки, обработать его и показать пользователю сообщение, что он ввел меньше и больше данных, чем требуется.
+ *
+ * Приложение должно попытаться распарсить полученные значения и выделить из них требуемые параметры. Если форматы данных не совпадают, нужно бросить исключение, соответствующее типу проблемы. Можно использовать встроенные типы java и создать свои. Исключение должно быть корректно обработано, пользователю выведено сообщение с информацией, что именно неверно.
+ *
+ * Если всё введено и обработано верно, должен создаться файл с названием, равным фамилии, в него в одну строку должны записаться полученные данные, вида
+ *
+ * <Фамилия><Имя><Отчество><номер_телефона>
+ *
+ * Однофамильцы должны записаться в один и тот же файл, в отдельные строки.
+ *
+ * Не забудьте закрыть соединение с файлом.
+ *
+ * При возникновении проблемы с чтением-записью в файл, исключение должно быть корректно обработано, пользователь должен увидеть стектрейс ошибки.
+ */
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Scanner;
+
 public class MainApp {
     public static void main(String[] args) {
         try (Scanner scanner = new Scanner(System.in)) {
-            System.out.print("Введите имя: ");
-            String firstName = scanner.nextLine();
+            System.out.println("Введите данные в формате: Фамилия Имя Отчество номертелефона");
+            String input = scanner.nextLine();
 
-            System.out.print("Введите фамилию: ");
-            String lastName = scanner.nextLine();
+            // Разделите введенные данные на отдельные элементы по пробелу
+            String[] inputData = input.split(" ");
 
-            System.out.print("Введите отчество: ");
-            String patronymic = scanner.nextLine();
+            // Проверьте количество введенных элементов
+            if (inputData.length != 4) {
+                System.err.println("Ошибка: введено недостаточно или слишком много данных.");
+                return;
+            }
 
-            System.out.print("Введите ваш телефон: ");
-            long phoneNumber;
+            // Извлеките данные из массива
+            String lastName = inputData[0];
+            String firstName = inputData[1];
+            String patronymic = inputData[2];
+
+            // Попытайтесь преобразовать номер телефона в целое число
+            int phoneNumber;
             try {
-                phoneNumber = Long.parseLong(scanner.nextLine());
+                phoneNumber = Integer.parseInt(inputData[3]);
             } catch (NumberFormatException e) {
                 System.err.println("Ошибка: номер телефона должен быть целым числом.");
                 return;
@@ -36,13 +73,7 @@ public class MainApp {
 
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
                 // Запишите данные пользователя в файл
-                writer.write("Имя: " + user.getFirstName());
-                writer.newLine();
-                writer.write("Фамилия: " + user.getLastName());
-                writer.newLine();
-                writer.write("Отчество: " + user.getSurname());
-                writer.newLine();
-                writer.write("Телефон: " + user.getPhoneNumber());
+                writer.write(user.toString());
                 System.out.println("Данные успешно записаны в файл " + fileName);
             } catch (IOException e) {
                 System.err.println("Ошибка при записи в файл: " + e.getMessage());
@@ -50,3 +81,4 @@ public class MainApp {
         }
     }
 }
+
